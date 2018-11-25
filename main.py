@@ -56,7 +56,7 @@ orders = {
     'blue': '🔵 Синий',
     'lesnoi_fort': '🚑 Лечим',
     'les': '🚑',
-    'gorni_fort': ' 👮 Патрулируем',
+    'gorni_fort': '👮 Патрулируем',
     'gora': '👮',
     'cover': '🛡 Защита',
     'attack': '💥 Атака',
@@ -82,9 +82,9 @@ get_info_diff = 360
 hero_message_id = ''
 
 bot_enabled = True
-arena_enabled = false
+arena_enabled = False
 les_enabled = True
-corovan_enabled = True
+corovan_enabled = False
 order_enabled = True
 auto_def_enabled = True
 
@@ -142,10 +142,10 @@ def parse_text(text, username, message_id):
 
         elif text.find('До битвы осталось') != -1:
             hero_message_id = message_id
-            m = re.search('До битвы осталось(?: ([0-9]+)ч){0,1}(?: ([0-9]+)){0,1}', text)
+            m = re.search('До битвы осталось(?: ([0-9]+)ч.){0,1}(?: ([0-9]+)мин.){0,1}', text)
             if not m.group(1):
                 if m.group(2) and int(m.group(2)) <= 59:
-                    # send_msg(admin_username, 'До битвы ' + m.group(2) + ' минут(ы)!')
+                    send_msg(admin_username, 'До битвы ' + m.group(2) + ' минут(ы)!')
                     # прекращаем все действия
                     state = re.search('Состояние:\\n(.*)$', text)
                     if auto_def_enabled and time() - current_order['time'] > 3600:
@@ -154,17 +154,17 @@ def parse_text(text, username, message_id):
             log('Времени достаточно')
             # теперь узнаем, сколько у нас выносливости и золота
             # m = re.search('Золото: (-*[0-9]+)\\n.*Выносливость: ([0-9]+) из', text)
-            gold = int(re.search('Деньги: (-*[0-9]+)\\n', text).group(1))
-            endurance = int(re.search('Выносливость: ([0-9]+)', text).group(1))
-            log('Золото: {0}, выносливость: {1}'.format(gold, endurance))
-            if les_enabled and endurance > 0 and '🌲Лес' not in action_list:
-                action_list.append('🌲Лес')
+            gold = int(re.search('💵 Деньги: (-*[0-9]+)', text).group(1))
+            endurance = int(re.search('🔋 Выносливость: ([0-9]+)/', text).group(1))
+            log('Деньги: {0}, выносливость: {1}'.format(gold, endurance))
+            if les_enabled and endurance >= 0 and '🚑 Лечим' not in action_list:
+                action_list.append('🚑 Лечим')
             elif arena_enabled and gold >= 5 and '🔎Поиск соперника' not in action_list and time() - lt_arena > 3600:
                 action_list.append('🔎Поиск соперника')
 
         elif arena_enabled and text.find('выбери точку атаки и точку защиты') != -1:
             lt_arena = time()
-            attack_chosen = arena_attack[random.randint(0, 2)]
+            #push_orderk_chosen = arena_attack[random.randint(0, 2)]
             cover_chosen = arena_cover[random.randint(0, 2)]
             log('Атака: {0}, Защита: {1}'.format(attack_chosen, cover_chosen))
             action_list.append(attack_chosen)
