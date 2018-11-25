@@ -12,16 +12,16 @@ import _thread
 import random
 
 # username игрового бота
-bot_username = 'ChatWarsBot'
+bot_username = 'citywars_bot'
 
 # ваш username или username человека, который может отправлять запросы этому скрипту
-admin_username = ''
+admin_username = 'naeternitas'
 
 # username бота и/или человека, которые будут отправлять приказы
-order_usernames = ''
+order_usernames = 'naeternitas'
 
 # имя замка
-castle_name = 'blue'
+castle_name = 'yellow'
 
 # путь к сокет файлу
 socket_path = ''
