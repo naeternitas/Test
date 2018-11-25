@@ -49,23 +49,25 @@ for opt, arg in opts:
         port = int(arg)
 
 orders = {
-    'red': '🇮🇲',
-    'black': '🇬🇵',
-    'white': '🇨🇾',
-    'yellow': '🇻🇦',
-    'blue': '🇪🇺',
-    'lesnoi_fort': '🌲Лесной форт',
-    'les': '🌲',
-    'gorni_fort': '⛰Горный форт',
-    'gora': '⛰',
+    'red': '🔴 Красный',
+    'black': '⚫️ Чёрный',
+    'white': '⚪️ Белый',
+    'yellow': '🌕 Желтый',
+    'blue': '🔵 Синий',
+    'lesnoi_fort': '🚑 Лечим',
+    'les': '🚑',
+    'gorni_fort': ' 👮 Патрулируем',
+    'gora': '👮',
     'cover': '🛡 Защита',
-    'attack': '⚔ Атака',
+    'attack': '💥 Атака',
     'cover_symbol': '🛡',
-    'hero': '🏅Герой',
+    'hero': '👤 Профиль',
     'corovan': '/go',
 }
 
-arena_cover = ['🛡головы', '🛡корпуса', '🛡ног']
+
+
+arena_cover = ['🛡', '🛡корпуса', '🛡ног']
 arena_attack = ['🗡в голову', '🗡по корпусу', '🗡по ногам']
 # поменять blue на red, black, white, yellow в зависимости от вашего замка
 castle = orders[castle_name]
@@ -80,7 +82,7 @@ get_info_diff = 360
 hero_message_id = ''
 
 bot_enabled = True
-arena_enabled = True
+arena_enabled = false
 les_enabled = True
 corovan_enabled = True
 order_enabled = True
@@ -138,9 +140,9 @@ def parse_text(text, username, message_id):
         if orders['corovan'] in action_list and time() - current_order['time'] < 3600:
             update_order(current_order['order'])
 
-        elif text.find('Битва пяти замков через') != -1:
+        elif text.find('До битвы осталось') != -1:
             hero_message_id = message_id
-            m = re.search('Битва пяти замков через(?: ([0-9]+)ч){0,1}(?: ([0-9]+)){0,1}', text)
+            m = re.search('До битвы осталось(?: ([0-9]+)ч){0,1}(?: ([0-9]+)){0,1}', text)
             if not m.group(1):
                 if m.group(2) and int(m.group(2)) <= 59:
                     # send_msg(admin_username, 'До битвы ' + m.group(2) + ' минут(ы)!')
@@ -152,7 +154,7 @@ def parse_text(text, username, message_id):
             log('Времени достаточно')
             # теперь узнаем, сколько у нас выносливости и золота
             # m = re.search('Золото: (-*[0-9]+)\\n.*Выносливость: ([0-9]+) из', text)
-            gold = int(re.search('Золото: (-*[0-9]+)\\n', text).group(1))
+            gold = int(re.search('Деньги: (-*[0-9]+)\\n', text).group(1))
             endurance = int(re.search('Выносливость: ([0-9]+)', text).group(1))
             log('Золото: {0}, выносливость: {1}'.format(gold, endurance))
             if les_enabled and endurance > 0 and '🌲Лес' not in action_list:
